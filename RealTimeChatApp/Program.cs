@@ -10,16 +10,39 @@ namespace RealTimeChatApp
             Console.WriteLine("Hello, Welcome to the Real-Time Chat Application!");
             ChatService chatService = new ChatService();
 
-            User user1 = new User("405", "Sairam", "Sairam96");
-            User user2 = new User("408", "Sansita", "Sansita354");
+            chatService.RegisterUser("Sairam", "Sairam123");
+            chatService.RegisterUser("Sansita", "Sansita456");
+            chatService.RegisterUser("bob", "bob28");
+            Console.WriteLine();
+
+            chatService.LoginUser("Sairam", "Sairam123");
+            chatService.LoginUser("Sansita", "Sansita456");
+            chatService.LoginUser("bob", "bob28");
+            Console.WriteLine();
 
             chatService.CreateChatRoom("ECE A");
-            chatService.SendMessage("ECE A", user1, "Hello everyone!");
-            chatService.SendMessage("ECE A", user2, "Hi Sairam!");
+            chatService.CreateChatRoom("VNR Hostel");
+            Console.WriteLine();
+
+            chatService.JoinChatRoom("Sairam", "ECE A");
+            chatService.JoinChatRoom("Sairam", "VNR Hostel");
+            chatService.JoinChatRoom("Sansita", "ECE A");
+            chatService.JoinChatRoom("bob", "VNR Hostel");
+            Console.WriteLine();
+
+            chatService.SendMessage("ECE A", "Sairam", "Hello ECE");
+            chatService.SendMessage("ECE A", "Sansita", "Hello Sairam!");
+            Console.WriteLine();
+
+            chatService.SendMessage("VNR Hostel", "bob", "Hello Hostel mates");
+            chatService.SendMessage("VNR Hostel", "Sairam", "Hello!");
+            Console.WriteLine();
 
             chatService.DisplayAllMessages("ECE A");
-            chatService.SearchMessages("Hello");
+            chatService.DisplayAllMessages("VNR Hostel");
+            Console.WriteLine();
 
+            chatService.SearchMessages("Hello");
             Console.ReadKey();
         }
     }

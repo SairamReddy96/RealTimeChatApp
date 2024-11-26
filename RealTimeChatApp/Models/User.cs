@@ -11,13 +11,14 @@ namespace RealTimeChatApp.Models
         public string ID { get; set; }
         public string Name { get; set; }
         public string UserName { get; set; }
-        public List<Message> Messages { get; set; } 
-        public User(string ID, string Name, string UserName)
+        public string Password { get; set; }
+        public bool isLoogedIn { get; set; }
+        public User(string ID, string userName, string password)
         {
             this.ID = ID;
-            this.Name = Name;
-            this.UserName = UserName;
-            Messages = new List<Message>();
+            UserName = userName;
+            Password = password;
+            isLoogedIn = false;
         }
     }
 }
