@@ -33,7 +33,7 @@ namespace RealTimeChatApp.Services
         {
             if(users.ContainsKey(userName) && users[userName].Password == passWord)
             {
-                users[userName].isLoogedIn = true;
+                users[userName].LogIn();
                 Console.WriteLine($"The user {userName} has been logged in successfully");
             }
             else
@@ -41,9 +41,20 @@ namespace RealTimeChatApp.Services
                 Console.WriteLine("Invalid username or password");
             }
         }
+        public void LogoutUser(string username)
+        {
+            if (!users.ContainsKey(username) || !users[username].isLoggedIn)
+            {
+                Console.WriteLine($"User '{username}' is not logged in.");
+                return;
+            }
+
+            users[username].LogOut();
+            Console.WriteLine($"User '{username}' logged out successfully.");
+        }
         public void JoinChatRoom(string username, string roomName)
         {
-            if(!users.ContainsKey(username) || !users[username].isLoogedIn)
+            if(!users.ContainsKey(username) || !users[username].isLoggedIn)
             {
                 Console.WriteLine("The username has not logged in or does not exist!");
                 return;
@@ -71,6 +82,19 @@ namespace RealTimeChatApp.Services
             roomUsers.Add(roomName, new List<User>());
             Console.WriteLine($"The chatroom with name '{roomName}' has been created");
         }
+        // this method broadcasts the messages for all the users in the specific room
+        public void BroadcastMessage(string roomName, string messageText)
+        {
+            if(!chatRooms.ContainsKey(roomName)) {
+                Console.WriteLine($"The chatroom with name '{roomName}' does not exist");
+                return;
+            }
+            Console.WriteLine($"Broadcasting message to room '{roomName}' : '{messageText}'");
+            foreach(var user in roomUsers[roomName])
+            {
+                Console.WriteLine($"[To '{user.UserName}'] : '{messageText}'");
+            }
+        }
         // used to send messages to a specific chatroom
         public void SendMessage(string roomName, string senderName, string messageText)
         {
@@ -79,13 +103,14 @@ namespace RealTimeChatApp.Services
                 Console.WriteLine("Chat room "+roomName+" doesn't exist");
                 return;
             }
-            if (!users.ContainsKey(senderName) || !users[senderName].isLoogedIn)
+            if (!users.ContainsKey(senderName) || !users[senderName].isLoggedIn)
             {
                 Console.WriteLine("The username "+senderName+" must be logged in to send a message");
+                return;
             }
             var message = new Message(senderName, "Everyone", DateTime.Now, messageText);
             room.Messages.Add(message);
-            Console.WriteLine($"Message sent to room {roomName} : [{senderName}] {messageText}");
+            BroadcastMessage(roomName, messageText);
         }
         // used to display all the messages of specified chatroom
         public void DisplayAllMessages(string roomName)
@@ -100,6 +125,19 @@ namespace RealTimeChatApp.Services
             foreach(var message in chatRoom.Messages)
             {
                 Console.WriteLine($"[{message.TimeStamp}] {message.Sender}: {message.MessageText}");
+            }
+        }
+        public void DisplayAllChatrooms()
+        {
+            if(chatRooms.Count == 0)
+            {
+                Console.WriteLine("No chat rooms exist");
+                return;
+            }
+            foreach(var chatRooms in chatRooms.Values)
+            {
+                Console.WriteLine("Chat Room: "+chatRooms.RoomName);
+                DisplayAllMessages(chatRooms.RoomName);
             }
         }
         // to search messages containing a specific keyword across all ChatRooms
@@ -125,7 +163,8 @@ namespace RealTimeChatApp.Services
             {
                 Console.WriteLine("No messages matching with the keyword "+keyword+" is found");
             }
-        }   
+        }  
+        
 
     }
 }

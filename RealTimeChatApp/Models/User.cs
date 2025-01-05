@@ -12,13 +12,29 @@ namespace RealTimeChatApp.Models
         public string Name { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public bool isLoogedIn { get; set; }
+        public bool isLoggedIn { get; set; }
         public User(string ID, string userName, string password)
         {
             this.ID = ID;
             UserName = userName;
             Password = password;
-            isLoogedIn = false;
+            isLoggedIn = false;
+        }
+        public void SetPassword(string password)
+        {
+            this.Password = password;
+        }
+        public bool VerifyPassword(string password)
+        {
+            return this.Password == password;
+        }
+        public void LogIn()
+        {
+            isLoggedIn = true;
+        }
+        public void LogOut()
+        {
+            isLoggedIn = false;
         }
     }
 }
